@@ -39,7 +39,8 @@ def api_health():
 def debug_mappings():
     """
     @Description:
-        Endpoint for debugging URL mappings.     Returns a JSON response containing the current URL mappings.
+        Endpoint for debugging URL mappings.    
+        Returns a JSON response containing the current URL mappings.
     @Returns:
         JSON: Current URL mappings.
     """
