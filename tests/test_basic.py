@@ -44,3 +44,13 @@ def test_shorten_and_redirect(client):
 
     assert resp2.status_code == 302
     assert resp2.headers['Location'] == 'https://www.google.com'
+
+def test_invalid_url(client):
+    """
+    Test submitting an invalid URL to the shortener.
+    Asserts that the response status is 400 and an error message is returned.
+    """
+    
+    resp = client.post('/api/shorten', json={"url": "not_a_url"})
+    assert resp.status_code == 400
+    assert 'error' in resp.get_json()
