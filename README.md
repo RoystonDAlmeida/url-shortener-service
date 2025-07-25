@@ -78,7 +78,7 @@ The base URL is `http://127.0.0.1:5000`.
 
             ```json
             {
-               "error": "error": "'url' parameter is required in request body"
+               "error": "'url' parameter is required in request body"
             }
             ```
 
@@ -92,12 +92,11 @@ The base URL is `http://127.0.0.1:5000`.
 
         -   `500 Internal Server Error`: If a unique short code cannot be generated after several attempts.
 
-            ```json
+         ```json
             {
                "error": "Could not generate unique code"
             }
-           ```
-
+         ```
 -   **`GET /<short_code>`**
     -   **Description**: Redirects to the original long URL.
     -   **Example**: `GET /aB1cD2`
@@ -125,12 +124,11 @@ The base URL is `http://127.0.0.1:5000`.
 
     -   **Error Response (404 Not Found)**: 
   
-        ```json
+      ```json
         {
           "error": "Short code not found"
         }
-       ```
-
+      ```
 ### Debugging
 
 -   **`GET /api/debug/mappings`**
