@@ -96,3 +96,13 @@ def test_stats(client):
     assert data['url'] == 'https://pytest.org'
     assert data['clicks'] == 2
     assert 'created_at' in data
+
+def test_stats_404(client):
+    """
+    Test the stats endpoint for a non-existent short code.
+    Asserts that the response status is 404 and an error message is returned.
+    """
+
+    resp = client.get('/api/stats/short_code_does_not_exist')
+    assert resp.status_code == 404
+    assert 'error' in resp.get_json()
