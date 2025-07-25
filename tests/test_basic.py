@@ -1,9 +1,11 @@
 import sys
 import os
+
 # Ensure the parent directory is in the Python path so 'app' can be imported
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest
+import concurrent.futures
 from app.main import app
 
 @pytest.fixture
@@ -106,3 +108,25 @@ def test_stats_404(client):
     resp = client.get('/api/stats/short_code_does_not_exist')
     assert resp.status_code == 404
     assert 'error' in resp.get_json()
+
+def test_thread_safety():
+    """
+    Test thread safety by sending multiple concurrent shorten requests.
+    Ensures all short codes are unique and all URLs are stored.
+    """
+    urls = [f"https://example.com/{i}" for i in range(20)]
+    results = []
+
+    def shorten(url):
+        with app.test_client() as client:
+            resp = client.post('/api/shorten', json={"url": url})
+            assert resp.status_code == 200
+            return resp.get_json()['short_code']
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor: # Creates a pool of 10 worker threads
+        futures = [executor.submit(shorten, url) for url in urls]   # Submit shorten function to the thread pool to be executed
+        for future in concurrent.futures.as_completed(futures):
+            results.append(future.result())
+
+    # Check all short codes are unique
+    assert len(set(results)) == len(urls)
