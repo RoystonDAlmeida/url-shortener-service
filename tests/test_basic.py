@@ -50,7 +50,17 @@ def test_invalid_url(client):
     Test submitting an invalid URL to the shortener.
     Asserts that the response status is 400 and an error message is returned.
     """
-    
+
     resp = client.post('/api/shorten', json={"url": "not_a_url"})
+    assert resp.status_code == 400
+    assert 'error' in resp.get_json()
+
+def test_missing_url(client):
+    """
+    Test submitting a request with a missing 'url' key to the shortener.
+    Asserts that the response status is 400 and an error message is returned.
+    """
+    
+    resp = client.post('/api/shorten', json={})
     assert resp.status_code == 400
     assert 'error' in resp.get_json()
