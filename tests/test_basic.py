@@ -60,7 +60,16 @@ def test_missing_url(client):
     Test submitting a request with a missing 'url' key to the shortener.
     Asserts that the response status is 400 and an error message is returned.
     """
-    
+
     resp = client.post('/api/shorten', json={})
     assert resp.status_code == 400
     assert 'error' in resp.get_json()
+
+def test_404_on_unknown_short_code(client):
+    """
+    Test accessing a non-existent short code.
+    Asserts that the response status is 404.
+    """
+
+    resp = client.get('/not_real_shortcode')
+    assert resp.status_code == 404
