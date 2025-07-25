@@ -96,7 +96,7 @@ def shorten_url():
     short_url = request.host_url.rstrip('/') + '/' + code
     return jsonify({"short_code": code, "short_url": short_url})
 
-@app.route('/api/<short_code>')
+@app.route('/<short_code>')
 def redirect_short_url(short_code):
     """
     @Description:
