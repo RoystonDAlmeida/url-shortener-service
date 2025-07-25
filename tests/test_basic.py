@@ -73,3 +73,26 @@ def test_404_on_unknown_short_code(client):
 
     resp = client.get('/not_real_shortcode')
     assert resp.status_code == 404
+
+def test_stats(client):
+    """
+    Test the stats endpoint for a valid short code.
+    Shortens a URL, accesses it twice, and checks that the click count and original URL are correct in the stats response.
+    """
+
+    # Shorten and use
+    resp = client.post('/api/shorten', json={"url": "https://pytest.org"})
+    code = resp.get_json()['short_code']
+
+    # Click twice
+    client.get(f'/{code}')
+    client.get(f'/{code}')
+
+    # Get the stats for 'code' 
+    stats = client.get(f'/api/stats/{code}')
+    data = stats.get_json()
+
+    # Assert that the stats are correct
+    assert data['url'] == 'https://pytest.org'
+    assert data['clicks'] == 2
+    assert 'created_at' in data
